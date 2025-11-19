@@ -7,7 +7,7 @@
   "type": "commonjs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chill4share/tiktok-live-tool.git"
+    "url": "https://github.com/chill4share/tik-live-tools.git"
   },
   "scripts": {
     "dev": "concurrently \"vite\" \"npx wait-on http://localhost:5173 && electron . --dev\"",
@@ -46,7 +46,7 @@
       {
         "provider": "github",
         "owner": "chill4share",
-        "repo": "tiktok-live-tool"
+        "repo": "tik-live-tools"
       }
     ],
     "directories": {
