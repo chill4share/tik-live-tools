@@ -1,0 +1,17 @@
+pnpm store prune
+pnpm install -> gây lỗi, dùng npm
+
+npm install
+npm run dev
+
+npm run build:renderer
+npm run dist
+npx electron-builder --win --x64
+
+rmdir /s /q node_modules
+pnpm run dev
+Remove-Item -Recurse -Force ./node_modules
+
+Remove-Item ./pnpm-lock.yaml -ErrorAction SilentlyContinue
+
+Remove-Item ./package-lock.json -ErrorAction SilentlyContinue
