@@ -28,11 +28,24 @@ const MenuBar = ({ activeTab, setActiveTab, isConnected }) => {
   });
 
   const [showHelp, setShowHelp] = useState(false);
-
-  // --- STATE MỚI CHO MODAL API KEY ---
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [keyInput, setKeyInput] = useState("");
-  // -----------------------------------
+  const [hasSavedKey, setHasSavedKey] = useState(false);
+
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowHelp(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleNewScrap = async () => {
     if (!isConnected) return;
@@ -112,25 +125,37 @@ Bạn có muốn LƯU và ÁP DỤNG cấu hình mới này?`;
     window.electronAPI.checkForUpdate();
   };
 
-  // --- LOGIC MỞ MODAL API KEY ---
   const handleInputApiKey = async () => {
     setShowHelp(false);
-    // Lấy key cũ để hiển thị (nếu có)
     const currentKey = await window.electronAPI.getAiApiKey();
-    setKeyInput(currentKey || "");
+    setHasSavedKey(!!currentKey && currentKey.length > 0);
+    setKeyInput("");
     setShowKeyModal(true);
   };
 
   const saveApiKey = async () => {
-    const res = await window.electronAPI.saveAiApiKey(keyInput.trim());
+    const newKey = keyInput.trim();
+
+    if (!newKey) {
+      if (hasSavedKey) {
+        alert("Bạn không nhập gì cả. Hệ thống sẽ giữ nguyên Key cũ.");
+        setShowKeyModal(false);
+      } else {
+        alert("Vui lòng nhập API Key để sử dụng tính năng này.");
+      }
+      return;
+    }
+
+    const res = await window.electronAPI.saveAiApiKey(newKey);
     if (res.ok) {
-      alert("✅ Đã lưu API Key thành công! (Được bảo mật trong hệ thống)");
+      alert("Đã lưu API Key mới thành công!");
+      setHasSavedKey(true);
       setShowKeyModal(false);
+      setKeyInput("");
     } else {
-      alert("❌ Lỗi khi lưu Key: " + res.error);
+      alert("Lỗi khi lưu Key: " + res.error);
     }
   };
-  // -----------------------------
 
   return (
     <div style={menuStyle}>
@@ -150,6 +175,7 @@ Bạn có muốn LƯU và ÁP DỤNG cấu hình mới này?`;
         ⚙️ Cài đặt AI
       </div>
       <div
+        ref={menuRef}
         style={{ position: "relative", marginLeft: "auto", cursor: "pointer" }}
         onClick={() => setShowHelp(!showHelp)}
       >
@@ -219,7 +245,9 @@ Bạn có muốn LƯU và ÁP DỤNG cấu hình mới này?`;
             <div
               className="menu-item"
               style={{ padding: "10px" }}
-              onClick={() => alert("TikTok Live Tool v1.0\nBuild by Gemini AI")}
+              onClick={() =>
+                alert("TikTok Live Tool v1.0.1\nBuild by Gemini AI")
+              }
             >
               ℹ️ About Tool
             </div>
@@ -227,7 +255,6 @@ Bạn có muốn LƯU và ÁP DỤNG cấu hình mới này?`;
         )}
       </div>
 
-      {/* --- MODAL NHẬP API KEY --- */}
       {showKeyModal && (
         <div
           style={{
@@ -263,11 +290,15 @@ Bạn có muốn LƯU và ÁP DỤNG cấu hình mới này?`;
             <input
               value={keyInput}
               onInput={(e) => setKeyInput(e.target.value)}
-              placeholder="Nhập API Key (bắt đầu bằng AIza...)"
+              placeholder={
+                hasSavedKey
+                  ? "✅ Đã có Key (Nhập mới để ghi đè...)"
+                  : "Nhập API Key (bắt đầu bằng AIza...)"
+              }
               style={{
                 padding: "10px",
                 borderRadius: "6px",
-                border: "1px solid #ccc",
+                border: hasSavedKey ? "2px solid #22c55e" : "1px solid #ccc",
                 width: "100%",
                 boxSizing: "border-box",
               }}
@@ -310,7 +341,6 @@ Bạn có muốn LƯU và ÁP DỤNG cấu hình mới này?`;
           </div>
         </div>
       )}
-      {/* -------------------------- */}
     </div>
   );
 };
