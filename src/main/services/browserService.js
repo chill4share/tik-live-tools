@@ -346,16 +346,22 @@ async function doSendComment(content) {
 
     for (const char of content) {
       await page.keyboard.type(char);
-      await sleep(randomInt(TYPING_DELAY_MIN, TYPING_DELAY_MAX));
+      await sleep(randomInt(50, 150));
     }
+
+    await sleep(100);
+    await page.keyboard.press("Space");
+    await sleep(50);
+    await page.keyboard.press("Backspace");
+
     await sleep(randomInt(300, 600));
+
     await page.keyboard.press("Enter");
-    log(`[Puppeteer] Sent: "${content}"`);
+
+    log(`[Puppeteer] Sent (Human Speed): "${content}"`);
   } catch (e) {
     err("[Send Error]", e.message);
-    throw new Error(
-      `Gửi thất bại. Hãy thử dùng tính năng 'New Scrap'. Error: ${e.message}`
-    );
+    throw new Error(`Gửi thất bại: ${e.message}`);
   }
 }
 

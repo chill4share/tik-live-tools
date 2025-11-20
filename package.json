@@ -1,6 +1,6 @@
 {
   "name": "tiktok-live-tool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TikTok Live Desktop Tool",
   "author": "Chill",
   "main": "src/main/index.js",
