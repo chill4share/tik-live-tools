@@ -481,7 +481,7 @@ function App() {
       history.set(dedupeKey, { ts: now });
 
       const isImportant =
-        /(giá|nhiêu|ship|size|còn|tư vấn|mã|đặt|shop|bnh|bn|bao tiền|mua|chốt|lấy|cọc|địa chỉ|sđt|số đt|inbox|ib|check|đệm|ghế|màu|bảo hành|bh|kích thước|dài|rộng|nặng|kg|tải|massage|lăn|khung|da|nỉ|vải|gỗ|sắt|nhựa|lắp|ráp|hỏng|lỗi|đổi|trả|tỉnh|hà nội|hcm|sài gòn|miễn phí|free|voucher|sale|giảm|foam|bông|nhung|thép|hòa phát|ovan|sơn|tĩnh điện|cao cấp|xuất khẩu|êm|nóng|bí|ngả|nằm|ngồi|ngủ|đọc sách|bầu|bỉm|già|cụ|đau lưng|bình dương)/i.test(
+        /(giá|nhiêu|ship|size|còn|tư vấn|mã|đặt|shop|bnh|bn|bao tiền|mua|chốt|lấy|cọc|địa chỉ|sđt|số đt|inbox|ib|check|đệm|ghế|màu|bảo hành|bh|kích thước|dài|rộng|nặng|kg|tải|massage|lăn|khung|da|nỉ|vải|gỗ|sắt|nhựa|lắp|ráp|hỏng|lỗi|đổi|trả|tỉnh|hà nội|hcm|sài gòn|miễn phí|free|voucher|sale|giảm|foam|bông|nhung|thép|hòa phát|ovan|sơn|tĩnh điện|cao cấp|xuất khẩu|êm|nóng|bí|ngả|nằm|ngồi|ngủ|đọc sách|bầu|bỉm|già|cụ|đau lưng|bình dương|hải phòng|đà nẵng|cần thơ|bắc ninh|nghệ an|thanh hóa|bền|chắc|xịn|thật|giả|chính hãng|mới|cũ|thanh lý|bom|xả|kho|sỉ|lẻ|buôn|ctv|cộng tác|zalo|fb|face|gửi|ảnh|video|clip|hướng dẫn|hd|sử dụng|vệ sinh|giặt|lau|tháo|bánh xe|xoay|tựa|gối|tay|chân|nâng|hạ|piston|hơi|thủy lực|trợ lực|trả góp|quẹt thẻ|visa|ck|chuyển khoản|cod|nhận hàng|kiểm tra|xem|thử|vừa|chật|to|nhỏ|cao|thấp|mét|cm|mm|mẫu|ảnh thật|feedback|review|đánh giá|uy tín|lừa|phốt|đắt|rẻ|bớt|tặng|quà|combo|bộ|cặp|đôi|lẻ|sẵn|hết|về|bao lâu|ngày|giờ|sáng|chiều|tối|gấp|nhanh|hỏa tốc|grab|ahamove|viettel|ghtk|ghn|bưu điện|xe khách|gửi xe|bảo trì|linh kiện|thay thế)/i.test(
           text
         );
 
