@@ -589,6 +589,16 @@ function App() {
         setFilterEnabled(false);
         alert("⚠️ Phiên Live đã kết thúc! Vui lòng chọn kênh khác.");
       });
+      window.electronAPI.onCaptchaDetected(() => {
+        setStatus("⚠️ CAPTCHA");
+        alert(
+          "TikTok yêu cầu xác minh (CAPTCHA)!\nTrình duyệt sẽ tự động mở lên. Vui lòng giải thủ công."
+        );
+        // Tự động mở trình duyệt lên luôn
+        window.electronAPI.openManualBrowser().then((res) => {
+          if (res.ok) setIsBrowserVisible(true);
+        });
+      });
     }
 
     const cleanupInterval = setInterval(() => {
@@ -629,10 +639,30 @@ function App() {
 
   const handleCheckCaptcha = async () => {
     if (!isModLoggedIn) return alert("Đăng nhập Mod trước!");
-    connectionTimeRef.current = Date.now();
-    const res = await window.electronAPI.openManualBrowser();
-    if (res.ok) {
-      setStatus("connected (scrape)");
+
+    // 1. Mở trình duyệt lên
+    const resOpen = await window.electronAPI.openManualBrowser();
+    if (!resOpen.ok) {
+      return alert("Lỗi mở trình duyệt: " + resOpen.error);
+    }
+    setIsBrowserVisible(true);
+    setStatus("WAITING CAPTCHA...");
+
+    // 2. Hỏi người dùng đã xong chưa
+    const userDone = confirm(
+      "Trình duyệt đã hiện lên.\n\n" +
+        "1. Hãy giải CAPTCHA trên cửa sổ đó (Chọn 2 hình giống nhau).\n" +
+        "2. Sau khi giải xong và vào được Live, bấm OK ở đây để tiếp tục."
+    );
+
+    if (userDone) {
+      // 3. Nếu xong rồi thì ẩn trình duyệt đi cho gọn
+      const resHide = await window.electronAPI.toggleBrowserView();
+      if (resHide.ok && !resHide.isVisible) {
+        setIsBrowserVisible(false);
+      }
+      setStatus("connected");
+      // Thử inject lại scraper để đảm bảo data chạy
       window.electronAPI.startFallbackScraper();
     }
   };

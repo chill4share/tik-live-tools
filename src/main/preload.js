@@ -31,6 +31,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   onHostInfoFound: (cb) => {
     ipcRenderer.on("host-info-found", (evt, nickname) => cb(nickname));
   },
+  onCaptchaDetected: (cb) => {
+    ipcRenderer.on("tiktok-captcha-detected", (evt, data) => cb(data));
+  },
 
   sendTikTokComment: (content) =>
     ipcRenderer.invoke("send-tiktok-comment", content),

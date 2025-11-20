@@ -1,12 +1,27 @@
 :root {
-  --bg: #eef0f3;
+  /* Màu nền tổng thể hơi xám xanh nhẹ cho dịu mắt */
+  --bg: #f3f4f6;
   --card: #ffffff;
+  /* TikTok Brand Color: Red & Cyan accent */
   --primary: #fe2c55;
-  --text-main: #161823;
-  --text-sub: #757575;
+  --primary-hover: #e62045;
+  --accent: #25f4ee;
+
+  --text-main: #111827;
+  --text-sub: #6b7280;
+
+  /* Chat Colors */
   --msg-bg-user: #ffffff;
-  --msg-bg-mod: #fe2c55;
+  --msg-bg-mod: linear-gradient(
+    135deg,
+    #fe2c55 0%,
+    #ff1744 100%
+  ); /* Gradient cho đẹp */
+
   --border-color: #e5e7eb;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 * {
@@ -15,7 +30,7 @@
 
 body,
 html {
-  margin: 0; /* Quan trọng: Xóa viền trắng thừa */
+  margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
@@ -23,13 +38,32 @@ html {
     Arial, sans-serif;
   background: var(--bg);
   color: var(--text-main);
-  overflow: hidden; /* Chặn scroll của cả ứng dụng */
+  overflow: hidden;
+  /* Giúp chữ hiển thị sắc nét hơn trên màn hình High DPI */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- CUSTOM SCROLLBAR (Thanh cuộn đẹp) --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Quan trọng: Full chiều cao */
+  height: 100vh;
   max-width: 100%;
 }
 
@@ -37,30 +71,36 @@ html {
 .top-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: var(--card);
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.9); /* Nền trong suốt nhẹ */
+  backdrop-filter: blur(8px); /* Hiệu ứng kính mờ (Glassmorphism) */
   border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0; /* Không bị co lại */
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
   z-index: 100;
 }
 
 .input-box {
   flex: 1;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border-radius: 20px; /* Bo tròn hơn */
+  border: 1px solid #d1d5db;
   outline: none;
   font-size: 14px;
+  transition: all 0.2s ease;
+  background: #f9fafb;
 }
 .input-box:focus {
   border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(254, 44, 85, 0.1); /* Hiệu ứng glow khi focus */
 }
 
+/* --- BUTTONS --- */
 .btn {
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 9px 16px;
+  border-radius: 18px;
   border: none;
   background: var(--primary);
   color: white;
@@ -68,72 +108,110 @@ html {
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(254, 44, 85, 0.2);
 }
 .btn:hover {
-  opacity: 0.9;
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(254, 44, 85, 0.3);
+}
+.btn:active {
+  transform: translateY(0);
 }
 .btn-secondary {
-  background: #e0e0e0;
-  color: #333;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  box-shadow: none;
+}
+.btn-secondary:hover {
+  background: #e5e7eb;
+  box-shadow: none;
 }
 .btn-danger {
-  background: #ff3b3b;
+  background: #ef4444;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+.btn-danger:hover {
+  background: #dc2626;
 }
 
 .status-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: #eee;
-  color: #555;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #e5e7eb;
+  color: #4b5563;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* --- MAIN CONTENT --- */
 .main-content {
   display: flex;
   flex: 1;
-  overflow: hidden; /* Để scroll bên trong con */
-  padding: 10px;
-  gap: 10px;
+  overflow: hidden;
+  padding: 16px; /* Tăng padding tổng thể */
+  gap: 16px;
 }
 
 /* --- CHAT COLUMN --- */
 .chat-col {
   flex: 2;
-  background: #f0f2f5; /* Màu nền chat như Zalo/Mess */
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 16px; /* Bo góc lớn hơn */
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .chat-header {
-  padding: 10px 16px;
+  padding: 14px 20px;
   background: #fff;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #f3f4f6;
   font-weight: 700;
-  font-size: 14px;
-  color: #333;
+  font-size: 15px;
+  color: var(--text-main);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chat-list {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px; /* Khoảng cách giữa các tin nhắn thoáng hơn */
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 20px 20px; /* Tạo pattern chấm bi mờ rất hiện đại */
+  background-color: #fafafa;
 }
 
 /* --- COMMENT ITEM (CHAT BUBBLE) --- */
+/* Thêm Animation tin nhắn bay vào */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .comment-item {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-end;
-  max-width: 85%;
+  max-width: 80%;
+  animation: slideIn 0.3s ease forwards;
 }
 
 .comment-item.is-mod {
@@ -142,76 +220,77 @@ html {
 }
 
 .avatar-wrap {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  background: #ccc;
+  background: #e5e7eb;
   flex-shrink: 0;
-}
-.avatar-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .msg-content {
   display: flex;
   flex-direction: column;
-  max-width: 100%;
 }
 
 .msg-info {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 2px;
+  gap: 8px;
+  margin-bottom: 4px;
   font-size: 11px;
-  color: #666;
-  padding-left: 2px;
+  color: var(--text-sub);
+  padding-left: 4px;
 }
 .is-mod .msg-info {
   flex-direction: row-reverse;
-  padding-right: 2px;
+  padding-right: 4px;
 }
 
 .user-name {
-  font-weight: 700;
+  font-weight: 600;
+  color: #374151;
 }
 
 .msg-bubble {
   background: var(--msg-bg-user);
-  padding: 8px 12px;
-  border-radius: 12px;
-  border-bottom-left-radius: 2px;
-  color: #1f1f1f;
+  padding: 10px 16px;
+  border-radius: 18px;
+  border-bottom-left-radius: 4px; /* Kiểu bubble hiện đại */
+  color: #1f2937;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.5;
   word-break: break-word;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .is-mod .msg-bubble {
   background: var(--msg-bg-mod);
   color: white;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 2px;
+  border-radius: 18px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 6px rgba(254, 44, 85, 0.25);
 }
 
+/* Tin nhắn quan trọng (Hỏi giá, mua hàng...) */
 .highlight-question {
-  background-color: #fff9c4;
-  border: 1px solid #fbc02d;
-  color: #000;
+  background: #fffbeb; /* Vàng nhạt luxury hơn */
+  border-left: 3px solid #f59e0b; /* Chỉ border trái cho tinh tế */
+  border-radius: 12px; /* Bo đều */
+  color: #92400e;
   font-weight: 500;
+  box-shadow: 0 4px 6px rgba(245, 158, 11, 0.1);
 }
 
-/* Menu Dropdown */
+/* --- MENU DROPDOWN --- */
+.menu-item {
+  transition: background 0.2s;
+}
 .menu-item:hover {
   background-color: #f3f4f6;
-  color: #000;
-}
-
-/* Nút lưu cài đặt */
-.btn:active {
-  transform: scale(0.98);
+  color: var(--primary);
 }

@@ -128,7 +128,7 @@ async function initBrowser() {
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-infobars",
-        "--window-position=-3000,-3000",
+        "--window-position=-3000,-3000", // Vẫn ẩn lúc đầu
         "--ignore-certificate-errors",
         "--disable-blink-features=AutomationControlled",
         "--disable-gpu",
@@ -167,6 +167,27 @@ async function initBrowser() {
     await page.goto(liveUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
     await sleep(3000);
 
+    // --- [LOGIC MỚI] KIỂM TRA CAPTCHA TỪ FILE HTML BẠN GỬI ---
+    const isCaptcha = await page.evaluate(() => {
+      // Check ID đặc thù của container Captcha
+      if (document.getElementById("captcha-verify-container-main-page"))
+        return true;
+      // Check class đặc thù
+      if (document.querySelector(".captcha-verify-container")) return true;
+      // Check ảnh Blob đặc trưng
+      const imgs = document.getElementsByTagName("img");
+      for (let img of imgs) {
+        if (img.alt === "Verify that you’re not a robot") return true;
+      }
+      return false;
+    });
+
+    if (isCaptcha) {
+      log("[Puppeteer] ⚠️ PHÁT HIỆN CAPTCHA! Đang báo về UI...");
+      forwardToRenderer("tiktok-captcha-detected", {}, "SYSTEM");
+    }
+    // ----------------------------------------------------------
+
     const title = await page.title();
     log(`[Page Title] ${title}`);
 
@@ -185,9 +206,10 @@ async function initBrowser() {
       await page.waitForSelector(selectors.inputSelector, { timeout: 5000 });
       await page.click(selectors.inputSelector).catch(() => {});
     } catch (e) {
-      warn(
-        `[Puppeteer] Cảnh báo: Không tìm thấy ô chat (${selectors.inputSelector}). Có thể cần chạy 'New Scrap'.`
-      );
+      // Nếu dính Captcha thì chắc chắn sẽ không thấy ô chat, bỏ qua cảnh báo
+      if (!isCaptcha) {
+        warn(`[Puppeteer] Cảnh báo: Không tìm thấy ô chat.`);
+      }
     }
 
     isBrowserInitializing = false;
