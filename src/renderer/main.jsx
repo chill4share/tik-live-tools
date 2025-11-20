@@ -652,7 +652,8 @@ function App() {
     const userDone = confirm(
       "Trình duyệt đã hiện lên.\n\n" +
         "1. Hãy giải CAPTCHA trên cửa sổ đó (Chọn 2 hình giống nhau).\n" +
-        "2. Sau khi giải xong và vào được Live, bấm OK ở đây để tiếp tục."
+        "2. Sau khi giải xong và vào được Live, bấm OK ở đây để tiếp tục.\n" +
+        "3. Bấm OK để bỏ qua nếu ko có Capcha."
     );
 
     if (userDone) {
@@ -741,26 +742,37 @@ function App() {
                 Ngắt kết nối
               </button>
             )}
-            <button className="btn btn-secondary" onClick={handleCheckCaptcha}>
-              Capcha
-            </button>
             <button
-              className="btn"
-              style={{
-                marginLeft: 8,
-                backgroundColor: isBrowserVisible ? "#f59e0b" : "#8b5cf6",
-              }}
-              onClick={handleToggleView}
+              className="btn btn-secondary"
+              onClick={handleCheckCaptcha}
+              title="Mở trình duyệt để xử lý Capcha hoặc Đăng nhập lại"
             >
-              {isBrowserVisible ? "🙈 Ẩn" : "👁️ Xem"}
+              🔧
             </button>
+            {(status.includes("connected") ||
+              status.includes("scrape") ||
+              isBrowserVisible) && (
+              <button
+                className="btn"
+                style={{
+                  marginLeft: 8,
+                  backgroundColor: isBrowserVisible ? "#f59e0b" : "#8b5cf6",
+                }}
+                onClick={handleToggleView}
+              >
+                {isBrowserVisible ? "🙈 Ẩn Browser" : "👁️ Soi Browser"}
+              </button>
+            )}
+
             <div
               className="status-label"
               style={{
                 color: status.includes("connected")
                   ? "#16a34a"
-                  : status === "OFFLINE" || status === "LIVE ENDED"
-                  ? "#ef4444"
+                  : status === "OFFLINE" ||
+                    status === "LIVE ENDED" ||
+                    status.includes("CAPTCHA")
+                  ? "#ef4444" // Màu đỏ cho lỗi/captcha
                   : "#6b7280",
               }}
             >
